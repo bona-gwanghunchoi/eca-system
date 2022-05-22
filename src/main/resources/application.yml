@@ -11,3 +11,8 @@ logging:
       hibernate:
         SQL: debug
         type : trace
+
+slack:
+  webhook:
+    url: https://hooks.slack.com/services/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
+    channel: eca-system
