@@ -1,0 +1,13 @@
+server:
+  port: 8080
+  baseUrl: /api/v1
+
+logging:
+  level:
+    root: info
+  file:
+    logLocation: C:/app/eca/log/eca-system.log
+    org:
+      hibernate:
+        SQL: debug
+        type : trace

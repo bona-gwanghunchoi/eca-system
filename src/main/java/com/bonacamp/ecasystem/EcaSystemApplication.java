@@ -8,6 +8,7 @@ public class EcaSystemApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(EcaSystemApplication.class, args);
+        System.out.println("Starting ECA System......");
     }
 
 }
