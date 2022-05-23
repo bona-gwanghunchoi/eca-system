@@ -6,17 +6,23 @@ spring:
   config:
     activate:
       on-profile: default
-  data:
-    mariadb:
+
+mybatis:
+  datasource:
+    mysql:
       jdbc-url: jdbc:log4jdbc:mariadb://61.75.30.54:3306/sdtdb?characterEncoding=UTF-8&allowMultiQueries=true&useAffectedRows=true
       username: sdtdbuser
       password: sdtdbpwd1234
       driverClassName: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+      mapperLocation: classpath:mybatis/mapper/**/*.xml
+      configLocation: classpath:mybatis/mybatis-config.xml
     oracle:
       jdbc-url: jdbc:log4jdbc:oracle:thin:@172.16.21.60:1521:ERP
       username: comm
       password: comm
       driverClassName: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+      mapperLocation: classpath:mybatis/mapper/**/*.xml
+      configLocation: classpath:mybatis/mybatis-config.xml
 
 logging:
   level:
