@@ -10,7 +10,6 @@
     </settings>
 
     <typeAliases>
-
-
+        <typeAlias alias="Account" type="com.bonacamp.ecasystem.domain.account.entity.Account"/>
     </typeAliases>
 </configuration>
