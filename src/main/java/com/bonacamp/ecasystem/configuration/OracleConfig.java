@@ -1,41 +1,71 @@
 package com.bonacamp.ecasystem.configuration;
 
-import com.bonacamp.ecasystem.configuration.datasource.BaseDataSource;
-import com.bonacamp.ecasystem.configuration.datasource.MybatisProperties;
+import com.bonacamp.ecasystem.util.CustomUtils;
+import com.zaxxer.hikari.HikariDataSource;
+import lombok.RequiredArgsConstructor;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 
-@ConditionalOnProperty(prefix = "mybatis.datasource.oracle", name = { "username", "password", "url", "mapperLocation"})
-@EnableConfigurationProperties({MybatisProperties.class})
+@RequiredArgsConstructor
+@ConditionalOnProperty(prefix = "mybatis.datasource", name = { "username", "password", "url", "mapperLocation"})
+@EnableConfigurationProperties({MyBatisProperties.class})
 @Configuration
 public class OracleConfig {
-    /**
-     * Properties 파일에 있는 기준으로 DB 연동에 사용할 DBProperties 생성
-     * @return DBProperties DB 연동 정보를 가지고 있는 객체
-     */
-    @Bean(name = "oracleProperties")
-    @ConfigurationProperties(prefix = "mybatis.datasource.oracle")
-    public MybatisProperties oracleProperties() {
-        return new MybatisProperties();
-    }
+    // 설정 정보 주입
+    private final MyBatisProperties myBatisProperties;
 
-    @Bean(name = "oracleDataSource")
-    public DataSource dataSource(@Qualifier("oracleProperties") MybatisProperties properties) {
-        return BaseDataSource.valueOf(properties);
+    @Bean(name = "myBatisDatasource")
+    public DataSource dataSource() {
+
+        // datasource 설정
+        HikariDataSource dataSource = new HikariDataSource();
+        dataSource.setJdbcUrl(myBatisProperties.getUrl());
+        dataSource.setUsername(myBatisProperties.getUsername());
+        dataSource.setPassword(myBatisProperties.getPassword());
+        dataSource.setDriverClassName(myBatisProperties.getDriverClassName());
+
+        return new LazyConnectionDataSourceProxy(dataSource);
     }
 
     @Order(1)
-    @Bean(name = "oracleTxManager")
-    public PlatformTransactionManager platformTransactionManager(@Qualifier("oracleDataSource") DataSource dataSource) {
+    @Bean(name = "myBatisTxManager")
+    public PlatformTransactionManager platformTransactionManager(@Qualifier("myBatisDatasource") DataSource dataSource) {
+
         return new DataSourceTransactionManager(dataSource);
+    }
+
+    @Bean(name = "myBatisSqlSessionFactory")
+    public SqlSessionFactory sqlSessionFactory(@Qualifier("myBatisDatasource") DataSource dataSource, ApplicationContext applicationContext) throws Exception {
+
+        SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
+
+        factoryBean.setDataSource(dataSource);
+        factoryBean.setMapperLocations(applicationContext.getResources(myBatisProperties.getMapperLocation()));
+
+        if (!CustomUtils.isNullOrEmpty(myBatisProperties.getConfigLocation())) {
+
+            factoryBean.setConfigLocation(applicationContext.getResource(myBatisProperties.getConfigLocation()));
+        }
+
+        return factoryBean.getObject();
+    }
+
+    @Bean(name = "myBatisSessionTemplate", destroyMethod = "clearCache")
+    public SqlSessionTemplate sessionTemplate(@Qualifier("myBatisSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
+
+        return new SqlSessionTemplate(sqlSessionFactory);
     }
 }
