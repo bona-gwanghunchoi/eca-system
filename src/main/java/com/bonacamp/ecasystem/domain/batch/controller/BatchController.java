@@ -1,6 +1,5 @@
-package com.bonacamp.ecasystem.batch.controller;
+package com.bonacamp.ecasystem.domain.batch.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,9 +10,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class BatchController {
 
-    @GetMapping("/health")
-    public String heath() {
-        // TEST : http://localhost:8080/api/v1/batch/health
-        return "OK";
-    }
+
 }
