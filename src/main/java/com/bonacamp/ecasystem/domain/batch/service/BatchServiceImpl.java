@@ -1,4 +1,4 @@
-package com.bonacamp.ecasystem.batch.service;
+package com.bonacamp.ecasystem.domain.batch.service;
 
 import org.springframework.stereotype.Service;
 
