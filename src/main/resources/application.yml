@@ -8,10 +8,17 @@ spring:
       on-profile: default
   data:
     mariadb:
-      jdbc-url: jdbc:log4jdbc:mariadb://3.37.89.243:3306/martDB?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+      jdbc-url: jdbc:log4jdbc:mariadb://172.27.235.104:3306/ecaDB?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
       username: root
-      password: root
+      password: devdbpw1234
+      driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    oracle:
+      url: jdbc:log4jdbc:oracle:thin:@172.16.21.60:1521:ERP
+      username: comm
+      password: comm
       driverClassName: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+      mapperLocation: classpath:mybatis/mapper/**/*.xml
+      configLocation: classpath:mybatis/mybatis-config.xml
     jpa:
       properties:
         hibernate:
@@ -20,15 +27,6 @@ spring:
           temp:
             use_jdbc_metadata_defaults: false
         generate-ddl: true
-
-mybatis:
-  datasource:
-    jdbc-url: jdbc:log4jdbc:oracle:thin:@172.16.21.60:1521:ERP
-    username: comm
-    password: comm
-    driverClassName: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-    mapperLocation: classpath:mybatis/mapper/**/*.xml
-    configLocation: classpath:mybatis/mybatis-config.xml
 
 logging:
   level:
