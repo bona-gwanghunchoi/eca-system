@@ -20,7 +20,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import javax.sql.DataSource;
 
 @RequiredArgsConstructor
-@ConditionalOnProperty(prefix = "mybatis.datasource", name = { "username", "password", "url", "mapperLocation"})
+@ConditionalOnProperty(prefix = "spring.data.oracle", name = { "username", "password", "url"})
 @EnableConfigurationProperties({MyBatisProperties.class})
 @Configuration
 public class OracleConfig {
