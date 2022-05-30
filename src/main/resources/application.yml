@@ -42,3 +42,9 @@ slack:
   webhook:
     url: https://hooks.slack.com/services/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
     channel: eca-system
+
+
+httptemplate:
+  ws_id: ws1
+  poc_id: poc1
+    

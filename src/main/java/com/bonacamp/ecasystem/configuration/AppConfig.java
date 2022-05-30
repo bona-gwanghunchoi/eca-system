@@ -29,4 +29,6 @@ public class AppConfig implements WebMvcConfigurer {
     public void configurePathMatch(PathMatchConfigurer configurer) {
         configurer.addPathPrefix(AppConfig.BASE_URL, HandlerTypePredicate.forAnnotation(RestController.class));
     }
+    
+    
 }
